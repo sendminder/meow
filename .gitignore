@@ -64,3 +64,4 @@
 .pub-cache/
 *.iml
 
+pubspec.lock
