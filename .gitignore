@@ -1,0 +1,66 @@
+# macOS Finder metadata
+.DS_Store
+
+# Flutter/Dart specific
+**/build/
+**/ios/Pods/
+**/android/build/
+**/android/app/build/
+**/android/gradle/
+**/android/local.properties
+**/android/gradlew
+**/android/gradlew.bat
+**/.pub-cache/
+**/lib/generated_plugin_registrant.dart
+
+# Android Studio
+**/.idea/
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+**/.idea/dart.xml
+**/.idea/caches/
+**/.idea/modules.xml
+**/.idea/.name
+**/.idea/encodings.xml
+**/.idea/vcs.xml
+**/.idea/jsLibraryMappings.xml
+
+# Visual Studio Code
+**/.vscode/
+**/*.code-workspace
+
+# IntelliJ IDEA
+**/*.iml
+**/.metadata/
+**/.idea/misc.xml
+
+# Flutter/Dart package dependency
+**/.packages
+
+# Flutter/Dart analysis options
+**/analysis_options.yaml
+
+# Flutter app generated artifacts
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.dart_tool/
+**/.flutter-plugins
+
+# Dart test results
+**/test/**/generated_runner.dart
+**/test/**/golden_image_test.dart
+
+# Web-related
+**/web/packages/
+**/web/flutter_service_worker.js
+**/web/main.dart.js
+**/web/index.html
+
+# Other
+.idea/
+.vscode/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+*.iml
+
