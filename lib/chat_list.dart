@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:meow/chat_room.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'websocket_provider.dart';
 
 class ChatRoomListScreen extends StatefulWidget {
   final int userId;
@@ -66,11 +68,16 @@ class _ChatRoomListScreenState extends State<ChatRoomListScreen> {
   }
 
   void _enterChatRoom(int chatRoomId) {
-    // 채팅방 클릭 시 최신 메시지를 보여주는 페이지로 이동하는 코드 추가
+    final webSocketProvider =
+        Provider.of<WebSocketProvider>(context, listen: false);
+
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ChatRoomScreen(chatRoomId: chatRoomId),
+        builder: (context) => ChangeNotifierProvider.value(
+          value: webSocketProvider,
+          child: ChatRoomScreen(chatRoomId: chatRoomId, userId: widget.userId),
+        ),
       ),
     );
   }
@@ -80,16 +87,10 @@ class _ChatRoomListScreenState extends State<ChatRoomListScreen> {
         appBar: AppBar(title: Text('Chat Room List')),
         body: ListView.builder(
           itemCount: chatRooms.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(chatRooms[index].title),
-              onTap: () {
-                // 클릭 시 해당 채팅방으로 이동하는 코드 작성
-                // chatRooms[index]를 사용하여 필요한 정보를 전달할 수 있음
-                _enterChatRoom(chatRooms[index].id);
-              },
-            );
-          },
+          itemBuilder: (context, index) => ListTile(
+            title: Text(chatRooms[index].title),
+            onTap: () => _enterChatRoom(chatRooms[index].id),
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

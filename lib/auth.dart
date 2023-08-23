@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:meow/chat_list.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'websocket_provider.dart';
 
 class AuthService {
   Future<int?> createUser(
@@ -123,10 +125,16 @@ class UserAuthScreen extends StatelessWidget {
 }
 
 void _navigateToChatRoomListScreen(BuildContext context, int userId) {
+  final webSocketProvider =
+      WebSocketProvider('ws://localhost:8080?user_id=' + userId.toString());
   Navigator.pushReplacement(
     context,
     MaterialPageRoute(
-      builder: (context) => ChatRoomListScreen(userId: userId),
+      builder: (context) => ChangeNotifierProvider.value(
+        // value 생성자 사용
+        value: webSocketProvider, // 생성한 인스턴스 전달
+        child: ChatRoomListScreen(userId: userId),
+      ),
     ),
   );
 }
