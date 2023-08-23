@@ -30,6 +30,12 @@ class WebSocketProvider with ChangeNotifier {
 
   void addMessage(Map<String, dynamic> message) {
     print(message);
+
+    var msg = Message(
+        content: message['text'],
+        createdAt: DateTime.parse(message['created_time']));
+    appendMessages(message['conversation_id'], msg);
+
     notifyListeners();
   }
 
@@ -44,8 +50,6 @@ class WebSocketProvider with ChangeNotifier {
     };
     _channel!.sink.add(json.encode(payload));
 
-    Message msg = Message(content: message, createdAt: DateTime.now());
-    appendMessages(chatRoomId, msg);
     notifyListeners();
   }
 
