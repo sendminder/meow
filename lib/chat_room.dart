@@ -9,9 +9,11 @@ import 'websocket_provider.dart';
 
 class ChatRoomScreen extends StatefulWidget {
   final int chatRoomId;
+  final String chatType;
   final int userId;
 
-  ChatRoomScreen({required this.chatRoomId, required this.userId});
+  ChatRoomScreen(
+      {required this.chatRoomId, required this.chatType, required this.userId});
 
   @override
   _ChatRoomScreenState createState() => _ChatRoomScreenState();
@@ -58,7 +60,11 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
   Future<void> sendMessage() async {
     _webSocketProvider.sendMessage(
-        _messageController.text, widget.chatRoomId, widget.userId);
+      _messageController.text,
+      widget.chatRoomId,
+      widget.chatType,
+      widget.userId,
+    );
     _messageController.clear();
     setState(() {
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);

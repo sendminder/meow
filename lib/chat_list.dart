@@ -47,7 +47,7 @@ class _ChatRoomListScreenState extends State<ChatRoomListScreen> {
     final createConversationData = {
       'name': 'New Chat Room', // 이름 설정 (필요에 따라 변경)
       'host_user_id': widget.userId,
-      'joined_users': [widget.userId, 1], // 호스트 유저 포함
+      'joined_users': [widget.userId, 8], // 호스트 유저 포함
     };
 
     final response = await http.post(
@@ -67,7 +67,7 @@ class _ChatRoomListScreenState extends State<ChatRoomListScreen> {
     }
   }
 
-  void _enterChatRoom(int chatRoomId) {
+  void _enterChatRoom(int chatRoomId, String ctype) {
     final webSocketProvider =
         Provider.of<WebSocketProvider>(context, listen: false);
 
@@ -76,7 +76,8 @@ class _ChatRoomListScreenState extends State<ChatRoomListScreen> {
       MaterialPageRoute(
         builder: (context) => ChangeNotifierProvider.value(
           value: webSocketProvider,
-          child: ChatRoomScreen(chatRoomId: chatRoomId, userId: widget.userId),
+          child: ChatRoomScreen(
+              chatRoomId: chatRoomId, chatType: ctype, userId: widget.userId),
         ),
       ),
     );
@@ -88,8 +89,9 @@ class _ChatRoomListScreenState extends State<ChatRoomListScreen> {
         body: ListView.builder(
           itemCount: chatRooms.length,
           itemBuilder: (context, index) => ListTile(
-            title: Text(chatRooms[index].title),
-            onTap: () => _enterChatRoom(chatRooms[index].id),
+            title: Text(chatRooms[index].name),
+            onTap: () =>
+                _enterChatRoom(chatRooms[index].id, chatRooms[index].type),
           ),
         ),
         floatingActionButton: FloatingActionButton(
@@ -103,21 +105,23 @@ class _ChatRoomListScreenState extends State<ChatRoomListScreen> {
 }
 
 class ChatRoom {
-  final String title;
+  final String name;
   final int id;
+  final String type;
 
-  ChatRoom({required this.title, required this.id});
+  ChatRoom({required this.name, required this.id, required this.type});
 
   factory ChatRoom.fromJson(Map<String, dynamic> json) {
     return ChatRoom(
-      title: json['Name'],
-      id: json['Id'],
+      name: json['name'],
+      id: json['id'],
+      type: json['type'],
     );
   }
 }
 
 void main() {
   runApp(MaterialApp(
-    home: ChatRoomListScreen(userId: 3), // 사용자 ID를 전달
+    home: ChatRoomListScreen(userId: 8), // 사용자 ID를 전달
   ));
 }

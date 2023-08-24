@@ -43,11 +43,17 @@ class WebSocketProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void sendMessage(String message, int chatRoomId, int userId) {
+  void sendMessage(
+    String message,
+    int chatRoomId,
+    String chatType,
+    int userId,
+  ) {
     final payload = {
       'event': 'create_message',
       'payload': {
         'conv_id': chatRoomId,
+        'conv_type': chatType,
         'text': message,
         'sender_id': userId,
       },
