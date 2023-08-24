@@ -91,11 +91,12 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                     _webSocketProvider.getMessages(widget.chatRoomId)[index];
                 final isMyMessage = message.senderId == widget.userId;
 
-                final messageTextStyle = TextStyle(
+                final messageTextStyle = const TextStyle(
+                  fontFamily: 'NotoSans',
                   color: Colors.black,
                   fontSize: 16.0,
                 );
-                final timeTextStyle = TextStyle(
+                final timeTextStyle = const TextStyle(
                   color: Color.fromARGB(228, 172, 172, 172),
                   fontSize: 10.0,
                 );
