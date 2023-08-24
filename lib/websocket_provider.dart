@@ -31,9 +31,13 @@ class WebSocketProvider with ChangeNotifier {
   void addMessage(Map<String, dynamic> message) {
     print(message);
 
-    var msg = Message(
-        content: message['text'],
-        createdAt: DateTime.parse(message['created_time']));
+    final msg = Message(
+      content: message['text'],
+      createdAt: DateTime.parse(message['created_time']),
+      id: message['id'],
+      convId: message['conversation_id'],
+      senderId: message['sender_id'],
+    );
     appendMessages(message['conversation_id'], msg);
 
     notifyListeners();
@@ -58,17 +62,16 @@ class WebSocketProvider with ChangeNotifier {
     _channel = null;
   }
 
-  setMessages(int chatRoomId, List<Message> msgs) {
+  void setMessages(int chatRoomId, List<Message> msgs) {
     messages[chatRoomId] = msgs;
   }
 
-  appendMessages(int chatRoomId, Message msgs) {
+  void appendMessages(int chatRoomId, Message msgs) {
     messages[chatRoomId]?.add(msgs);
   }
 
   List<Message> getMessages(int chatRoomId) {
-    List<Message> empty = [];
-    if (!messages.containsKey(chatRoomId)) return empty;
+    if (!messages.containsKey(chatRoomId)) return <Message>[];
     return messages[chatRoomId]!;
   }
 }

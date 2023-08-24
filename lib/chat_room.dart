@@ -19,12 +19,19 @@ class ChatRoomScreen extends StatefulWidget {
 
 class _ChatRoomScreenState extends State<ChatRoomScreen> {
   final TextEditingController _messageController = TextEditingController();
-  dynamic webSocketProvider;
+  dynamic _webSocketProvider;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     fetchMessages();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _webSocketProvider.removeListener(handleEvent);
   }
 
   Future<void> fetchMessages() async {
@@ -41,7 +48,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
           messageList.map<Message>((item) => Message.fromJson(item)).toList();
 
       setState(() {
-        webSocketProvider.setMessages(widget.chatRoomId, messageObjects);
+        _webSocketProvider.setMessages(widget.chatRoomId, messageObjects);
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       });
     } else {
       print('Failed to fetch messages');
@@ -49,14 +57,25 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   }
 
   Future<void> sendMessage() async {
-    webSocketProvider.sendMessage(
+    _webSocketProvider.sendMessage(
         _messageController.text, widget.chatRoomId, widget.userId);
     _messageController.clear();
+    setState(() {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
+  }
+
+  void handleEvent() {
+    setState(() {
+      print('event handle!');
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    webSocketProvider = Provider.of<WebSocketProvider>(context, listen: true);
+    _webSocketProvider = Provider.of<WebSocketProvider>(context, listen: true);
+    _webSocketProvider.addListener(handleEvent);
 
     return Scaffold(
       appBar: AppBar(title: Text('Chat Room #${widget.chatRoomId}')),
@@ -64,13 +83,14 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         children: [
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               itemCount:
-                  webSocketProvider.getMessages(widget.chatRoomId).length,
+                  _webSocketProvider.getMessages(widget.chatRoomId).length,
               itemBuilder: (context, index) => ListTile(
-                title: Text(webSocketProvider
+                title: Text(_webSocketProvider
                     .getMessages(widget.chatRoomId)[index]
                     .content),
-                subtitle: Text(webSocketProvider
+                subtitle: Text(_webSocketProvider
                     .getMessages(widget.chatRoomId)[index]
                     .createdAt
                     .toString()),
