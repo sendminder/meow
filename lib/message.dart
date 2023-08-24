@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Message {
   final String content;
   final DateTime createdAt;
@@ -19,4 +21,9 @@ class Message {
         convId: json['conversation_id'],
         senderId: json['sender_id'],
       );
+
+  String get formattedCreatedAt {
+    final formattedTime = DateFormat('HH:mm').format(createdAt.toLocal());
+    return formattedTime;
+  }
 }

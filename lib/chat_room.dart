@@ -86,15 +86,70 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               controller: _scrollController,
               itemCount:
                   _webSocketProvider.getMessages(widget.chatRoomId).length,
-              itemBuilder: (context, index) => ListTile(
-                title: Text(_webSocketProvider
-                    .getMessages(widget.chatRoomId)[index]
-                    .content),
-                subtitle: Text(_webSocketProvider
-                    .getMessages(widget.chatRoomId)[index]
-                    .createdAt
-                    .toString()),
-              ),
+              itemBuilder: (context, index) {
+                final message =
+                    _webSocketProvider.getMessages(widget.chatRoomId)[index];
+                final isMyMessage = message.senderId == widget.userId;
+
+                final messageTextStyle = TextStyle(
+                  color: Colors.black,
+                  fontSize: 16.0,
+                );
+                final timeTextStyle = TextStyle(
+                  color: Color.fromARGB(228, 172, 172, 172),
+                  fontSize: 10.0,
+                );
+
+                final textWidth = TextPainter(
+                  text:
+                      TextSpan(text: message.content, style: messageTextStyle),
+                  textDirection: TextDirection.ltr,
+                )..layout();
+
+                final timeWidget = Text(
+                  message.formattedCreatedAt,
+                  style: timeTextStyle,
+                );
+
+                final bgColor = isMyMessage
+                    ? Color.fromARGB(150, 118, 182, 234)
+                    : Color.fromARGB(150, 129, 218, 132);
+
+                return Container(
+                  margin: EdgeInsets.symmetric(vertical: 6.0),
+                  child: Row(
+                    mainAxisAlignment: isMyMessage
+                        ? MainAxisAlignment.end
+                        : MainAxisAlignment.start,
+                    children: [
+                      if (isMyMessage) timeWidget,
+                      Container(
+                        margin: EdgeInsets.only(left: 8.0, right: 6.0),
+                        decoration: BoxDecoration(
+                          color: bgColor,
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            width: 1.0,
+                          ),
+                        ),
+                        width: textWidth.width + 30.0,
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              message.content,
+                              style: messageTextStyle,
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (!isMyMessage) timeWidget,
+                    ],
+                  ),
+                );
+              },
             ),
           ),
           Padding(
