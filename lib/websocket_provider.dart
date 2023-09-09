@@ -52,8 +52,8 @@ class WebSocketProvider with ChangeNotifier {
     final payload = {
       'event': 'create_message',
       'payload': {
-        'conv_id': chatRoomId,
-        'conv_type': chatType,
+        'conversation_id': chatRoomId,
+        'conversation_type': chatType,
         'text': message,
         'sender_id': userId,
       },
